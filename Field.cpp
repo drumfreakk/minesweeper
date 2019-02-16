@@ -5,8 +5,18 @@
 Field::~Field() {
     for (int count = 0; count < Field::height; ++count)
         delete[] Field::field[count];
-    delete[] Field::field; // this needs to be done last
+    delete[] Field::field;
     Field::field = nullptr;
+
+    for (int count = 0; count < Field::height; ++count)
+        delete[] Field::pField[count];
+    delete[] Field::pField;
+    Field::pField = nullptr;
+
+    for (int count = 0; count < Field::height; ++count)
+        delete[] Field::clicked[count];
+    delete[] Field::clicked;
+    Field::clicked = nullptr;
 }
 
 int Field::getSingleIndex(const int row, const int col) {
@@ -76,14 +86,6 @@ void Field::setupField(const int bombs){
                 }
             }
         }
-    }
-
-
-    for(int y = 0; y < height; y++){
-        for(int x = 0; x < width; x++){
-            std::cout << '\t' << field[y][x];
-        }
-        std::cout << "\n\n";
     }
 }
 
