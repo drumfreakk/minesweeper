@@ -1,17 +1,32 @@
 #include <iostream>
 #include "Field.h"
 
-//TODO: add valgrind/memcheck
-
 
 int main() {
-    Field f(7, 7);
+    Field f(5, 5);
 
-    f[4][3] = 3;
+    f.setupField(3);
 
-    f.setupField(5);
+    std::cout << "\n\n\n" << f <<'\n';
 
-    std::cout << f;
+    int xclick;
+    int yclick;
+
+    bool alive = true;
+
+    while (alive) {
+
+        std::cout << "\nx: ";
+        std::cin >> xclick;
+        std::cout << "\ny: ";
+        std::cin >> yclick;
+
+        alive = f.click(xclick, yclick);
+
+        std::cout << f;
+    }
+
+    std::cout << "BOOM!\n";
 
     return 0;
 }
