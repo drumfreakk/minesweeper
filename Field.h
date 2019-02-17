@@ -68,8 +68,6 @@ public:
 
     void setupField(const int bombs);
 
-    int getSingleIndex(const int row, const int col);
-
     Return click(const int clickx, const int clicky, char type);
 
     int& operator() (const char* var);

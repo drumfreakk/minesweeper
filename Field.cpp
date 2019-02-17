@@ -19,10 +19,6 @@ Field::~Field() {
     Field::clicked = nullptr;
 }
 
-int Field::getSingleIndex(const int row, const int col) {
-    return (row * Field::width) + col;
-}
-
 std::ostream& operator<< (std::ostream &out, Field &field) {
     for(int y = 0; y < field.height; y++){
         for(int x = 0; x < field.width; x++){     //width
