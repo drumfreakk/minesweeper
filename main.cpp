@@ -3,30 +3,41 @@
 
 
 int main() {
-    Field f(5, 5);
+	Field f(5, 5);
 
-    f.setupField(3);
+	f.setupField(3);
 
-    std::cout << "\n\n\n" << f <<'\n';
+	std::cout << "\n\n\n" << f <<'\n';
 
-    int xclick;
-    int yclick;
+	int xclick;
+	int yclick;
 
-    bool alive = true;
+	char type;
 
-    while (alive) {
+	Return status = RETURN_ALIVE;
 
-        std::cout << "\nx: ";
-        std::cin >> xclick;
-        std::cout << "\ny: ";
-        std::cin >> yclick;
+	while (status == RETURN_ALIVE) {
+		do {
+			std::cout << "\nclick/flag: ";
+			std::cin >> type;
 
-        alive = f.click(xclick, yclick);
+			std::cout << "\nx: ";
+			std::cin >> xclick;
+			std::cout << "\ny: ";
+			std::cin >> yclick;
 
-        std::cout << f;
-    }
+			status = f.click(xclick, yclick, type);
 
-    std::cout << "BOOM!\n";
+			std::cout << f;
+		} while(status == RETURN_FALSE_CLICK);
 
-    return 0;
+	}
+
+	if(status == RETURN_DEAD) {
+		std::cout << "BOOM!\n";
+	} else if(status == RETURN_WIN){
+		std::cout << "\nYOU WIN!\n";
+	}
+
+	return 0;
 }

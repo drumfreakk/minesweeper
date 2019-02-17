@@ -5,6 +5,14 @@
 #include <random>
 #include <ctime>
 
+enum Return{
+    RETURN_ALIVE,
+    RETURN_DEAD,
+    RETURN_FALSE_CLICK,
+    RETURN_ERROR,
+    RETURN_WIN
+};
+
 class Field {
 private:
     int height;
@@ -16,6 +24,8 @@ private:
 
     int mine = -1;
 
+    int bombs;
+
     std::mt19937 rndgen;
     std::uniform_int_distribution<> randx;
     std::uniform_int_distribution<> randy;
@@ -23,6 +33,8 @@ private:
     void showTile(const int x, const int y);
 
     void pClick(const int x, const int y);
+    Return flag(const int clickx, const int clicky);
+    Return clickMain(const int clickx, const int clicky);
 
 public:
     Field(int height, int width)
@@ -58,7 +70,7 @@ public:
 
     int getSingleIndex(const int row, const int col);
 
-    bool click(const int clickx, const int clicky);
+    Return click(const int clickx, const int clicky, char type);
 
     int& operator() (const char* var);
 

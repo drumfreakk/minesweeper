@@ -49,6 +49,8 @@ int* Field::operator[](const int row){
 
 void Field::setupField(const int bombs){
 
+    Field::bombs = bombs;
+
     bool nuffbombs = false;
     int doneBombs = 0;
 
@@ -89,19 +91,51 @@ void Field::setupField(const int bombs){
     }
 }
 
-bool Field::click(const int clickx, const int clicky){
-    if(Field::field[clicky][clickx] == mine){
-        Field::clicked[clicky][clickx] = true;
-        for(int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                showTile(x, y);
+Return Field::click(const int clickx, const int clicky, char type){
+    Return ret;
+    if (type == 'c') {
+        ret = Field::clickMain(clickx, clicky);
+    } else if (type == 'f') {
+        ret = Field::flag(clickx, clicky);
+    } else {
+        return RETURN_ERROR;
+    }
+
+    int doneBombs = 0;
+
+    for(int x = 0; x < width; x++){
+        for(int y = 0; y < height; y++){
+            if(Field::field[y][x] == mine && Field::pField[y][x] == 'f'){
+                doneBombs += 1;
             }
         }
-        return false;
-    } else {
-        pClick(clickx, clicky);
     }
-    return true;
+
+    if(doneBombs >= Field::bombs){
+        return RETURN_WIN;
+    }
+
+    return ret;
+}
+
+Return Field::clickMain(const int clickx, const int clicky){
+    if(Field::clicked[clicky][clickx] == false && Field::pField[clicky][clickx] != 'f') {
+        if (Field::field[clicky][clickx] == mine) {
+            Field::clicked[clicky][clickx] = true;
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    showTile(x, y);
+                }
+            }
+            return RETURN_DEAD;
+        } else {
+            pClick(clickx, clicky);
+            return RETURN_ALIVE;
+        }
+    } else {
+        return RETURN_FALSE_CLICK;
+    }
+
 }
 
 void Field::pClick(const int x, const int y){
@@ -117,6 +151,19 @@ void Field::pClick(const int x, const int y){
                 }
             }
         }
+    }
+}
+
+Return Field::flag(const int clickx, const int clicky){
+    if(Field::clicked[clicky][clickx] == false){
+        if(Field::pField[clicky][clickx] != 'f') {
+            Field::pField[clicky][clickx] = 'f';
+        } else if(Field::pField[clicky][clickx] == 'f'){
+            Field::pField[clicky][clickx] = '-';
+        }
+        return RETURN_ALIVE;
+    } else {
+        return RETURN_FALSE_CLICK;
     }
 }
 
