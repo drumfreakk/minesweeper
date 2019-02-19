@@ -3,7 +3,7 @@
 
 
 int main() {
-	Field f(5, 5);
+	TermField f(5, 5);
 
 	f.setupField(3);
 

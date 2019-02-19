@@ -2,50 +2,57 @@
 
 
 
-Field::~Field() {
-    for (int count = 0; count < Field::height; ++count)
-        delete[] Field::field[count];
-    delete[] Field::field;
-    Field::field = nullptr;
+BaseField::~BaseField() {
+    for (int count = 0; count < height; ++count)
+        delete[] field[count];
+    delete[] field;
+	field = nullptr;
 
-    for (int count = 0; count < Field::height; ++count)
-        delete[] Field::pField[count];
-    delete[] Field::pField;
-    Field::pField = nullptr;
+    for (int count = 0; count < height; ++count)
+        delete[] pField[count];
+    delete[] pField;
+	pField = nullptr;
 
-    for (int count = 0; count < Field::height; ++count)
-        delete[] Field::clicked[count];
-    delete[] Field::clicked;
-    Field::clicked = nullptr;
+    for (int count = 0; count < height; ++count)
+        delete[] clicked[count];
+    delete[] clicked;
+	clicked = nullptr;
 }
 
-std::ostream& operator<< (std::ostream &out, Field &field) {
+TermField::~TermField() {
+    for (int count = 0; count < height; ++count)
+        delete[] t_pField[count];
+    delete[] t_pField;
+    t_pField = nullptr;
+}
+
+std::ostream& operator<< (std::ostream &out, TermField &field) {
     for(int y = 0; y < field.height; y++){
         for(int x = 0; x < field.width; x++){     //width
-            out << '\t' << field.pField[y][x];
+            out << '\t' << field.t_pField[y][x];
         }
         out << "\n\n";
     }
     return out;
 }
 
-int& Field::operator() (const char* val){
+int BaseField::operator() (const char* val){
     if(val == "height"){
-        return Field::height;
+        return height;
     }
     else if(val == "width"){
-        return Field::width;
+        return width;
     }
-    return Field::mine;
+    return RETURN_ERROR;
 }
 
-int* Field::operator[](const int row){
-    return Field::field[row];
+int* BaseField::operator[](const int row){
+    return field[row];
 }
 
-void Field::setupField(const int bombs){
+void BaseField::setupField(const int bombs){
 
-    Field::bombs = bombs;
+	BaseField::bombs = bombs;
 
     bool nuffbombs = false;
     int doneBombs = 0;
@@ -54,9 +61,9 @@ void Field::setupField(const int bombs){
         int x = randx(rndgen);
         int y = randy(rndgen);
 
-        if(Field::field[y][x] != mine) {
+        if(field[y][x] != CODE_MINE) {
 
-            Field::field[y][x] = mine;
+	        field[y][x] = CODE_MINE;
 
             doneBombs += 1;
         }
@@ -69,15 +76,15 @@ void Field::setupField(const int bombs){
 
     for(int x = 0; x < width; x++) {
         for(int y = 0; y < height; y++) {
-            if(Field::field[y][x] == mine){
+            if(field[y][x] == CODE_MINE){
 
                 for(int xb = x - 1; xb < x + 2; xb++){
                     if(xb >= 0 && xb < width) {
 
                         for (int yb = y - 1; yb < y + 2; yb++) {
-                            if(yb >= 0 && yb < height && Field::field[yb][xb] != mine) {
+                            if(yb >= 0 && yb < height && field[yb][xb] != CODE_MINE) {
 
-                                Field::field[yb][xb] += 1;
+	                            field[yb][xb] += 1;
                             }
                         }
                     }
@@ -87,12 +94,12 @@ void Field::setupField(const int bombs){
     }
 }
 
-Return Field::click(const int clickx, const int clicky, char type){
+Return BaseField::click(const int clickx, const int clicky, char type){
     Return ret;
     if (type == 'c') {
-        ret = Field::clickMain(clickx, clicky);
+        ret = clickMain(clickx, clicky);
     } else if (type == 'f') {
-        ret = Field::flag(clickx, clicky);
+        ret = flag(clickx, clicky);
     } else {
         return RETURN_ERROR;
     }
@@ -101,23 +108,23 @@ Return Field::click(const int clickx, const int clicky, char type){
 
     for(int x = 0; x < width; x++){
         for(int y = 0; y < height; y++){
-            if(Field::field[y][x] == mine && Field::pField[y][x] == 'f'){
+            if(field[y][x] == CODE_MINE && pField[y][x] == CODE_FLAG){
                 doneBombs += 1;
             }
         }
     }
 
-    if(doneBombs >= Field::bombs){
+    if(doneBombs >= bombs){
         return RETURN_WIN;
     }
 
     return ret;
 }
 
-Return Field::clickMain(const int clickx, const int clicky){
-    if(Field::clicked[clicky][clickx] == false && Field::pField[clicky][clickx] != 'f') {
-        if (Field::field[clicky][clickx] == mine) {
-            Field::clicked[clicky][clickx] = true;
+Return BaseField::clickMain(const int clickx, const int clicky){
+    if(clicked[clicky][clickx] == false && pField[clicky][clickx] != CODE_FLAG) {
+        if (field[clicky][clickx] == CODE_MINE) {
+	        clicked[clicky][clickx] = true;
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     showTile(x, y);
@@ -134,14 +141,14 @@ Return Field::clickMain(const int clickx, const int clicky){
 
 }
 
-void Field::pClick(const int x, const int y){
-    Field::clicked[y][x] = true;
+void BaseField::pClick(const int x, const int y){
+	clicked[y][x] = true;
     showTile(x, y);
-    if(Field::field[y][x] == 0){
+    if(field[y][x] == 0){
         for(int xb = x - 1; xb < x + 2; xb++){
-            if(xb >= 0 && xb < Field::width) {
+            if(xb >= 0 && xb < width) {
                 for (int yb = y - 1; yb < y + 2; yb++) {
-                    if(yb >= 0 && yb < Field::height && Field::clicked[yb][xb] == false) {
+                    if(yb >= 0 && yb < height && clicked[yb][xb] == false) {
                         pClick(xb, yb);
                     }
                 }
@@ -150,51 +157,65 @@ void Field::pClick(const int x, const int y){
     }
 }
 
-Return Field::flag(const int clickx, const int clicky){
-    if(Field::clicked[clicky][clickx] == false){
-        if(Field::pField[clicky][clickx] != 'f') {
-            Field::pField[clicky][clickx] = 'f';
-        } else if(Field::pField[clicky][clickx] == 'f'){
-            Field::pField[clicky][clickx] = '-';
+Return BaseField::flag(const int clickx, const int clicky){
+    if(clicked[clicky][clickx] == false){
+        if(pField[clicky][clickx] != CODE_FLAG) {
+            pField[clicky][clickx] = CODE_FLAG;
+        } else if(pField[clicky][clickx] == CODE_FLAG){
+            pField[clicky][clickx] = CODE_LINE;
         }
+        mainShowTile(clickx, clicky);
         return RETURN_ALIVE;
     } else {
         return RETURN_FALSE_CLICK;
     }
 }
 
-//TODO: neaten this?
-void Field::showTile(const int x, const int y){
-    switch(Field::field[y][x]) {
-        case -1:
-            Field::pField[y][x] = 'm';
+void BaseField::showTile(const int x, const int y){
+	if(field[y][x] >= CODE_MINE){
+		pField[y][x] = field[y][x];
+	}
+
+    mainShowTile(x, y);
+}
+
+void TermField::mainShowTile(const int x, const int y) {
+    switch(pField[y][x]) {
+        case CODE_MINE:
+            t_pField[y][x] = t_mine;
+            break;
+        case CODE_FLAG:
+            t_pField[y][x] = t_flag;
+            break;
+        case CODE_LINE:
+            t_pField[y][x] = t_line;
             break;
         case 0:
-            Field::pField[y][x] = '0';
+            t_pField[y][x] = '0';
             break;
         case 1:
-            Field::pField[y][x] = '1';
+            t_pField[y][x] = '1';
             break;
         case 2:
-            Field::pField[y][x] = '2';
+            t_pField[y][x] = '2';
             break;
         case 3:
-            Field::pField[y][x] = '3';
+            t_pField[y][x] = '3';
             break;
         case 4:
-            Field::pField[y][x] = '4';
+            t_pField[y][x] = '4';
             break;
         case 5:
-            Field::pField[y][x] = '5';
+            t_pField[y][x] = '5';
             break;
         case 6:
-            Field::pField[y][x] = '6';
+            t_pField[y][x] = '6';
             break;
         case 7:
-            Field::pField[y][x] = '7';
+            t_pField[y][x] = '7';
             break;
         case 8:
-            Field::pField[y][x] = '8';
+            t_pField[y][x] = '8';
             break;
     }
 }
