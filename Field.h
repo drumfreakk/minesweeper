@@ -5,6 +5,10 @@
 #include <random>
 #include <ctime>
 
+
+//TODO: INPUT VALIDATION!!!
+
+
 enum Return{
     RETURN_ALIVE,
     RETURN_DEAD,
@@ -21,45 +25,46 @@ enum Codes{
 };
 
 class BaseField {
+private:
+
+	int m_bombs;
+
+	std::mt19937 m_rndgen;
+	std::uniform_int_distribution<> m_randXPos;
+	std::uniform_int_distribution<> m_randYPos;
+
 protected:
-    int height;
-    int width;
-    int **field;
-    int **pField;
+    int m_height;
+    int m_width;
 
-    bool **clicked;
-
-
-    int bombs;
-
-    std::mt19937 rndgen;
-    std::uniform_int_distribution<> randx;
-    std::uniform_int_distribution<> randy;
+    int **m_field;
+    int **m_visibleField;
+    bool **m_clicked;
 
     void showTile(const int x, const int y);
 
     virtual void mainShowTile(const int x, const int y) = 0;
 
     void pClick(const int x, const int y);
-    Return flag(const int clickx, const int clicky);
-    Return clickMain(const int clickx, const int clicky);
+    Return flag(const int x, const int y);
+    Return clickMain(const int x, const int y);
 
 public:
 	BaseField(const int height, const int width)
-        : height(height), width(width), randx(0, width - 1), randy(0, height - 1), rndgen(static_cast<unsigned int>(std::time(nullptr)))
+        : m_height(height), m_width(width), m_randXPos(0, width - 1), m_randYPos(0, height - 1), m_rndgen(static_cast<unsigned int>(std::time(nullptr)))
     {
-        field = new int*[height];
-        for (int count = 0; count < height; ++count)
-            field[count] = new int[width]; // these are our columns
+        m_field = new int*[m_height];
+        for (int count = 0; count < m_height; ++count)
+            m_field[count] = new int[m_width]; // these are our columns
 
-        pField = new int*[height];
-        for (int count = 0; count < height; ++count) {
-            pField[count] = new int[width]; // these are our columns
+        m_visibleField = new int*[m_height];
+        for (int count = 0; count < m_height; ++count) {
+            m_visibleField[count] = new int[m_width]; // these are our columns
         }
 
-        clicked = new bool*[height];
-        for (int count = 0; count < height; ++count) {
-            clicked[count] = new bool[width]; // these are our columns
+        m_clicked = new bool*[m_height];
+        for (int count = 0; count < m_height; ++count) {
+            m_clicked[count] = new bool[m_width]; // these are our columns
         }
     }
 
@@ -67,9 +72,7 @@ public:
 
     void setupField(const int bombs);
 
-    Return click(const int clickx, const int clicky, char type);
-
-    int operator() (const char* var);
+    Return click(const int x, const int y, char type);
 
     int* operator[](const int row);
 
@@ -77,11 +80,11 @@ public:
 
 class TermField : public BaseField {
 private:
-	char **t_pField;
+	char **m_playerField;
 
-	char t_mine = 'm';
-	char t_line = '-';
-	char t_flag = 'f';
+	const char m_mine = 'm';
+	const char m_line = '-';
+	const char m_flag = 'f';
 
 	virtual void mainShowTile(const int x, const int y);
 
@@ -89,14 +92,14 @@ public:
 	TermField(const int height, const int width)
 	: BaseField(height, width)
 	{
-		t_pField = new char*[height];
-		for (int count = 0; count < height; ++count) {
-			t_pField[count] = new char[width]; // these are our columns
+		m_playerField = new char*[m_height];
+		for (int count = 0; count < m_height; ++count) {
+			m_playerField[count] = new char[m_width]; // these are our columns
 		}
 
-		for(int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				t_pField[y][x] = t_line;
+		for(int x = 0; x < m_width; x++) {
+			for (int y = 0; y < m_height; y++) {
+				m_playerField[y][x] = m_line;
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Field.h"
 
+//TODO: INPUT VALIDATION!!!
 
 int main() {
 	TermField f(5, 5);

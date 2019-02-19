@@ -1,90 +1,80 @@
 #include "Field.h"
 
-
+//TODO: INPUT VALIDATION!!!
 
 BaseField::~BaseField() {
-    for (int count = 0; count < height; ++count)
-        delete[] field[count];
-    delete[] field;
-	field = nullptr;
+    for (int count = 0; count < m_height; ++count)
+        delete[] m_field[count];
+    delete[] m_field;
+	m_field = nullptr;
 
-    for (int count = 0; count < height; ++count)
-        delete[] pField[count];
-    delete[] pField;
-	pField = nullptr;
+    for (int count = 0; count < m_height; ++count)
+        delete[] m_visibleField[count];
+    delete[] m_visibleField;
+	m_visibleField = nullptr;
 
-    for (int count = 0; count < height; ++count)
-        delete[] clicked[count];
-    delete[] clicked;
-	clicked = nullptr;
+    for (int count = 0; count < m_height; ++count)
+        delete[] m_clicked[count];
+    delete[] m_clicked;
+	m_clicked = nullptr;
 }
 
 TermField::~TermField() {
-    for (int count = 0; count < height; ++count)
-        delete[] t_pField[count];
-    delete[] t_pField;
-    t_pField = nullptr;
+    for (int count = 0; count < m_height; ++count)
+        delete[] m_playerField[count];
+    delete[] m_playerField;
+    m_playerField = nullptr;
 }
 
 std::ostream& operator<< (std::ostream &out, TermField &field) {
-    for(int y = 0; y < field.height; y++){
-        for(int x = 0; x < field.width; x++){     //width
-            out << '\t' << field.t_pField[y][x];
+    for(int y = 0; y < field.m_height; y++){
+        for(int x = 0; x < field.m_width; x++){     //m_width
+            out << '\t' << field.m_playerField[y][x];
         }
         out << "\n\n";
     }
     return out;
 }
 
-int BaseField::operator() (const char* val){
-    if(val == "height"){
-        return height;
-    }
-    else if(val == "width"){
-        return width;
-    }
-    return RETURN_ERROR;
-}
-
 int* BaseField::operator[](const int row){
-    return field[row];
+    return m_field[row];
 }
 
 void BaseField::setupField(const int bombs){
 
-	BaseField::bombs = bombs;
+	BaseField::m_bombs = bombs;
 
     bool nuffbombs = false;
     int doneBombs = 0;
 
     while(!nuffbombs){
-        int x = randx(rndgen);
-        int y = randy(rndgen);
+        int x = m_randXPos(m_rndgen);
+        int y = m_randYPos(m_rndgen);
 
-        if(field[y][x] != CODE_MINE) {
+        if(m_field[y][x] != CODE_MINE) {
 
-	        field[y][x] = CODE_MINE;
+	        m_field[y][x] = CODE_MINE;
 
             doneBombs += 1;
         }
 
-        if(doneBombs >= bombs){
+        if(doneBombs >= m_bombs){
             nuffbombs = true;
         }
 
     }
 
-    for(int x = 0; x < width; x++) {
-        for(int y = 0; y < height; y++) {
-            if(field[y][x] == CODE_MINE){
+    for(int x = 0; x < m_width; x++) {
+        for(int y = 0; y < m_height; y++) {
+            if(m_field[y][x] == CODE_MINE){
 
                 for(int xb = x - 1; xb < x + 2; xb++){
-                    if(xb >= 0 && xb < width) {
+                    if(xb >= 0 && xb < m_width) {
 
                         for (int yb = y - 1; yb < y + 2; yb++) {
-                            if(yb >= 0 && yb < height && field[yb][xb] != CODE_MINE) {
+                            if(yb >= 0 && yb < m_height && m_field[yb][xb] != CODE_MINE) {
 
-	                            field[yb][xb] += 1;
+	                            m_field[yb][xb] += 1;
                             }
                         }
                     }
@@ -94,45 +84,45 @@ void BaseField::setupField(const int bombs){
     }
 }
 
-Return BaseField::click(const int clickx, const int clicky, char type){
+Return BaseField::click(const int x, const int y, char type){
     Return ret;
     if (type == 'c') {
-        ret = clickMain(clickx, clicky);
+        ret = clickMain(x, y);
     } else if (type == 'f') {
-        ret = flag(clickx, clicky);
+        ret = flag(x, y);
     } else {
         return RETURN_ERROR;
     }
 
     int doneBombs = 0;
 
-    for(int x = 0; x < width; x++){
-        for(int y = 0; y < height; y++){
-            if(field[y][x] == CODE_MINE && pField[y][x] == CODE_FLAG){
+    for(int x = 0; x < m_width; x++){
+        for(int y = 0; y < m_height; y++){
+            if(m_field[y][x] == CODE_MINE && m_visibleField[y][x] == CODE_FLAG){
                 doneBombs += 1;
             }
         }
     }
 
-    if(doneBombs >= bombs){
+    if(doneBombs >= m_bombs){
         return RETURN_WIN;
     }
 
     return ret;
 }
 
-Return BaseField::clickMain(const int clickx, const int clicky){
-    if(clicked[clicky][clickx] == false && pField[clicky][clickx] != CODE_FLAG) {
-        if (field[clicky][clickx] == CODE_MINE) {
-	        clicked[clicky][clickx] = true;
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
+Return BaseField::clickMain(const int x, const int y){
+    if(m_clicked[y][x] == false && m_visibleField[y][x] != CODE_FLAG) {
+        if (m_field[y][x] == CODE_MINE) {
+	        m_clicked[y][x] = true;
+            for (int x = 0; x < m_width; x++) {
+                for (int y = 0; y < m_height; y++) {
                     showTile(x, y);
                 }
             }
             return RETURN_DEAD;
         } else {
-            pClick(clickx, clicky);
+            pClick(x, y);
             return RETURN_ALIVE;
         }
     } else {
@@ -142,13 +132,13 @@ Return BaseField::clickMain(const int clickx, const int clicky){
 }
 
 void BaseField::pClick(const int x, const int y){
-	clicked[y][x] = true;
+	m_clicked[y][x] = true;
     showTile(x, y);
-    if(field[y][x] == 0){
+    if(m_field[y][x] == 0){
         for(int xb = x - 1; xb < x + 2; xb++){
-            if(xb >= 0 && xb < width) {
+            if(xb >= 0 && xb < m_width) {
                 for (int yb = y - 1; yb < y + 2; yb++) {
-                    if(yb >= 0 && yb < height && clicked[yb][xb] == false) {
+                    if(yb >= 0 && yb < m_height && m_clicked[yb][xb] == false) {
                         pClick(xb, yb);
                     }
                 }
@@ -157,14 +147,14 @@ void BaseField::pClick(const int x, const int y){
     }
 }
 
-Return BaseField::flag(const int clickx, const int clicky){
-    if(clicked[clicky][clickx] == false){
-        if(pField[clicky][clickx] != CODE_FLAG) {
-            pField[clicky][clickx] = CODE_FLAG;
-        } else if(pField[clicky][clickx] == CODE_FLAG){
-            pField[clicky][clickx] = CODE_LINE;
+Return BaseField::flag(const int x, const int y){
+    if(m_clicked[y][x] == false){
+        if(m_visibleField[y][x] != CODE_FLAG) {
+            m_visibleField[y][x] = CODE_FLAG;
+        } else if(m_visibleField[y][x] == CODE_FLAG){
+            m_visibleField[y][x] = CODE_LINE;
         }
-        mainShowTile(clickx, clicky);
+        mainShowTile(x, y);
         return RETURN_ALIVE;
     } else {
         return RETURN_FALSE_CLICK;
@@ -172,50 +162,50 @@ Return BaseField::flag(const int clickx, const int clicky){
 }
 
 void BaseField::showTile(const int x, const int y){
-	if(field[y][x] >= CODE_MINE){
-		pField[y][x] = field[y][x];
+	if(m_field[y][x] >= CODE_MINE){
+		m_visibleField[y][x] = m_field[y][x];
 	}
 
     mainShowTile(x, y);
 }
 
 void TermField::mainShowTile(const int x, const int y) {
-    switch(pField[y][x]) {
+    switch(m_visibleField[y][x]) {
         case CODE_MINE:
-            t_pField[y][x] = t_mine;
+            m_playerField[y][x] = m_mine;
             break;
         case CODE_FLAG:
-            t_pField[y][x] = t_flag;
+            m_playerField[y][x] = m_flag;
             break;
         case CODE_LINE:
-            t_pField[y][x] = t_line;
+            m_playerField[y][x] = m_line;
             break;
         case 0:
-            t_pField[y][x] = '0';
+            m_playerField[y][x] = '0';
             break;
         case 1:
-            t_pField[y][x] = '1';
+            m_playerField[y][x] = '1';
             break;
         case 2:
-            t_pField[y][x] = '2';
+            m_playerField[y][x] = '2';
             break;
         case 3:
-            t_pField[y][x] = '3';
+            m_playerField[y][x] = '3';
             break;
         case 4:
-            t_pField[y][x] = '4';
+            m_playerField[y][x] = '4';
             break;
         case 5:
-            t_pField[y][x] = '5';
+            m_playerField[y][x] = '5';
             break;
         case 6:
-            t_pField[y][x] = '6';
+            m_playerField[y][x] = '6';
             break;
         case 7:
-            t_pField[y][x] = '7';
+            m_playerField[y][x] = '7';
             break;
         case 8:
-            t_pField[y][x] = '8';
+            m_playerField[y][x] = '8';
             break;
     }
 }
