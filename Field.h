@@ -4,6 +4,8 @@
 #include <iostream>
 #include <random>
 #include <ctime>
+#include <cctype>
+#include <string>
 
 
 //TODO: INPUT VALIDATION!!!
@@ -22,6 +24,14 @@ enum Codes{
 	CODE_MINE = -1,
 	CODE_FLAG = -2,
 	CODE_LINE = -3
+};
+
+enum Click{
+	CLICK_X,
+	CLICK_Y,
+	CLICK_TYPE,
+	CLICK_FLAG,
+	CLICK_CLICK
 };
 
 class BaseField {
@@ -72,7 +82,7 @@ public:
 
     void setupField(const int bombs);
 
-    Return click(const int x, const int y, char type);
+    Return click(const int x, const int y, Click type);
 
     int* operator[](const int row);
 
@@ -85,6 +95,10 @@ private:
 	const char m_mine = 'm';
 	const char m_line = '-';
 	const char m_flag = 'f';
+
+	std::string m_typeMsg = "CLick or Flag (c/f): ";
+	std::string m_xMsg = "x: ";
+	std::string m_yMsg = "y: ";
 
 	virtual void mainShowTile(const int x, const int y);
 
@@ -105,6 +119,9 @@ public:
 	}
 
 	~TermField();
+
+	int getPosInput(Click type);
+	Click getTypeInput();
 
 	friend std::ostream& operator<< (std::ostream &out, TermField &field);
 };

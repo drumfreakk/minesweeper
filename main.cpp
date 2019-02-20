@@ -10,24 +10,21 @@ int main() {
 
 	std::cout << "\n\n\n" << f <<'\n';
 
-	int xclick;
-	int yclick;
+	int x;
+	int y;
 
-	char type;
+	Click type;
 
 	Return status = RETURN_ALIVE;
 
 	while (status == RETURN_ALIVE) {
 		do {
-			std::cout << "\nclick/flag: ";
-			std::cin >> type;
+			type = f.getTypeInput();
 
-			std::cout << "\nx: ";
-			std::cin >> xclick;
-			std::cout << "\ny: ";
-			std::cin >> yclick;
+			x = f.getPosInput(CLICK_X);
+			y = f.getPosInput(CLICK_Y);
 
-			status = f.click(xclick, yclick, type);
+			status = f.click(x, y, type);
 
 			std::cout << f;
 		} while(status == RETURN_FALSE_CLICK);
