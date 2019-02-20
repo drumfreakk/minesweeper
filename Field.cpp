@@ -1,7 +1,5 @@
 #include "Field.h"
 
-//TODO: INPUT VALIDATION!!!
-
 BaseField::~BaseField() {
 	for (int count = 0; count < m_height; ++count)
 		delete[] m_field[count];
@@ -210,7 +208,6 @@ void TermField::mainShowTile(const int x, const int y) {
 	}
 }
 
-
 int TermField::getPosInput(Click type){
 	int pos;
 
@@ -257,7 +254,6 @@ Click TermField::getTypeInput(){
 
 	while (1)
 	{
-		// Get user's name
 		std::cout << m_typeMsg;
 		std::getline(std::cin, type);
 
@@ -267,4 +263,16 @@ Click TermField::getTypeInput(){
 			return CLICK_FLAG;
 
 	}
+}
+
+std::string& TermField::typeMsg(){
+	return m_typeMsg;
+}
+
+std::string& TermField::xMsg(){
+	return m_xMsg;
+}
+
+std::string& TermField::yMsg(){
+	return m_yMsg;
 }

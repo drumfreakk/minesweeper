@@ -7,10 +7,6 @@
 #include <cctype>
 #include <string>
 
-
-//TODO: INPUT VALIDATION!!!
-
-
 enum Return{
     RETURN_ALIVE,
     RETURN_DEAD,
@@ -29,7 +25,6 @@ enum Codes{
 enum Click{
 	CLICK_X,
 	CLICK_Y,
-	CLICK_TYPE,
 	CLICK_FLAG,
 	CLICK_CLICK
 };
@@ -122,6 +117,10 @@ public:
 
 	int getPosInput(Click type);
 	Click getTypeInput();
+
+	std::string& typeMsg();
+	std::string& xMsg();
+	std::string& yMsg();
 
 	friend std::ostream& operator<< (std::ostream &out, TermField &field);
 };
