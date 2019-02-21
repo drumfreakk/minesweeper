@@ -21,7 +21,11 @@ int* BaseField::operator[](const int row){
 	return m_field[row];
 }
 
-void BaseField::setupField(const int bombs){
+bool BaseField::setupField(const int bombs){
+
+	if(bombs > (m_height * m_width)){
+		return false;
+	}
 
 	BaseField::m_bombs = bombs;
 
@@ -63,6 +67,7 @@ void BaseField::setupField(const int bombs){
 			}
 		}
 	}
+	return true;
 }
 
 Return BaseField::click(const int x, const int y, Click type){

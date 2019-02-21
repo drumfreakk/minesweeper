@@ -62,7 +62,7 @@ public:
 
 	~BaseField();
 
-	void setupField(const int bombs);
+	bool setupField(const int bombs);
 
 	Return click(const int x, const int y, Click type);
 
