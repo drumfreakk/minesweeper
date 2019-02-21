@@ -1,7 +1,37 @@
 #include <iostream>
-#include "Field.h"
+#include "libs/Field.h"
+
+#define TERM
 
 int main() {
+
+#ifdef SFML
+
+	sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
+
+
+	SFMLField map(5, 5);
+
+	// run the main loop
+	while (window.isOpen())
+	{
+		// handle events
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if(event.type == sf::Event::Closed)
+				window.close();
+		}
+
+		// draw the map
+		window.clear();
+		window.draw(map);
+		window.display();
+	}
+
+#endif
+
+#ifdef TERM
 	TermField f(5, 5);
 
 	f.setupField(3);
@@ -34,6 +64,7 @@ int main() {
 	} else if(status == RETURN_WIN){
 		std::cout << "\nYOU WIN!\n";
 	}
+#endif
 
 	return 0;
 }
