@@ -12,7 +12,9 @@ add_executable(minesweeper
                 libs/TermField.cpp
                 libs/TermField.h
                 libs/SFMLField.cpp
-                libs/SFMLField.h)
+                libs/SFMLField.h
+                libs/FieldTexture.cpp
+                libs/FieldTexture.h)
 
 # Detect and add SFML
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})

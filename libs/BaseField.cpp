@@ -181,3 +181,48 @@ void BaseField::showTile(const int x, const int y){
 
 	showPlayerTile(x, y);
 }
+
+void BaseField::setSize(const int height, const int width) {
+
+	for (int count = 0; count < m_height; ++count)
+		delete[] m_field[count];
+	delete[] m_field;
+	m_field = nullptr;
+
+	for (int count = 0; count < m_height; ++count)
+		delete[] m_visibleField[count];
+	delete[] m_visibleField;
+	m_visibleField = nullptr;
+
+	for (int count = 0; count < m_height; ++count)
+		delete[] m_clicked[count];
+	delete[] m_clicked;
+	m_clicked = nullptr;
+
+	m_height = height;
+	m_width = width;
+
+	m_randXPos = std::uniform_int_distribution<>(0, width - 1);
+	m_randYPos = std::uniform_int_distribution<>(0, height - 1);
+
+
+	m_field = new int*[m_height];
+	for (int count = 0; count < m_height; ++count)
+		m_field[count] = new int[m_width]; // these are our columns
+
+	m_visibleField = new int*[m_height];
+	for (int count = 0; count < m_height; ++count) {
+		m_visibleField[count] = new int[m_width]; // these are our columns
+	}
+
+	m_clicked = new bool*[m_height];
+	for (int count = 0; count < m_height; ++count) {
+		m_clicked[count] = new bool[m_width]; // these are our columns
+	}
+
+	for(int x = 0; x < m_width; x++){
+		for(int y = 0; y < m_height; y++) {
+			m_visibleField[y][x] = CODE_LINE;
+		}
+	}
+}

@@ -60,11 +60,32 @@ public:
 		}
 	}
 
+	/// if you use this initializer, you must call setSize before anything else
+	BaseField()
+		: m_rndgen(static_cast<unsigned int>(std::time(nullptr))), m_height(1), m_width(1)
+	{
+		m_field = new int*[m_height];
+		for (int count = 0; count < m_height; ++count)
+			m_field[count] = new int[m_width]; // these are our columns
+
+		m_visibleField = new int*[m_height];
+		for (int count = 0; count < m_height; ++count) {
+			m_visibleField[count] = new int[m_width]; // these are our columns
+		}
+
+		m_clicked = new bool*[m_height];
+		for (int count = 0; count < m_height; ++count) {
+			m_clicked[count] = new bool[m_width]; // these are our columns
+		}
+	}
+
 	~BaseField();
 
 	bool setupField(const int bombs);
 
 	Return click(const int x, const int y, Click type);
+
+	void setSize(const int height, const int width);
 
 	int* operator[](const int row);
 

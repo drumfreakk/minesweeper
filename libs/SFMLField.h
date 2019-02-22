@@ -5,35 +5,44 @@
 
 #include "BaseField.h"
 #include "Enums.h"
+#include "FieldTexture.h"
 
 class SFMLField : public BaseField, public sf::Drawable, public sf::Transformable {
 private:
-	sf::VertexArray m_vertices;
-	sf::Texture m_texture;
+	sf::Vertex *m_vertices;
+	FieldTexture m_texture;
+
+	sf::Color m_defaultBackground = sf::Color(183, 183, 183, 1);
+
+	const int m_vertexPerQuad = 4;
+
+	int m_pixelHeight;
+	int m_pixelWidth;
 
 	virtual void showPlayerTile(const int x, const int y);
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	{
-		// apply the entity's transform -- combine it with the one that was passed by the caller
-		states.transform *= getTransform(); // getTransform() is defined by sf::Transformable
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-		// apply the texture
-		states.texture = &m_texture;
-
-		// you may also override states.shader or states.blendMode if you want
-
-		// draw the vertex array
-		target.draw(m_vertices, states);
-	}
+	int getIndex(const int x, const int y, const int vertex);
 
 public:
 
-	SFMLField(const int height, const int width)
-			: BaseField(height, width)
+	SFMLField()
+			: BaseField()
 	{
-
+		m_vertices = new sf::Vertex[1];
+		m_texture.load();
 	}
+
+	~SFMLField();
+
+	void setSize(const int height, const int width);
+
+	void setupField(const sf::Vector2f topLeft, const sf::Vector2f bottomRight, const int bombs);
+
+	sf::Color& defaultBackground();
+
+	sf::Vertex& operator()(const int x, const int y, const int vertex);
 
 };
 

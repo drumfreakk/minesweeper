@@ -1,29 +1,36 @@
 #include <iostream>
 #include "libs/Field.h"
 
-#define TERM
+#define SFML
+
 
 #ifdef SFML
-int main() {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
 
-	SFMLField map(5, 5);
-	// run the main loop
+#include <SFML/Graphics.hpp>
+
+int main() {
+	sf::RenderWindow window(sf::VideoMode(450, 450), "Minesweeper");
+
+	SFMLField field;
+
+	field.setSize(5, 5);
+	field.setupField(sf::Vector2f(50, 50), sf::Vector2f(400, 400), 3);
+
 	while (window.isOpen()) {
-		// handle events
+
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
 
-		// draw the map
-		window.clear();
-		window.draw(map);
+		window.clear(field.defaultBackground());
+		window.draw(field);
 		window.display();
 	}
 	return 0;
 }
+
 #endif
 
 #ifdef TERM
