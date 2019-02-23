@@ -19,6 +19,9 @@ private:
 	int m_pixelHeight;
 	int m_pixelWidth;
 
+	sf::Vector2f m_topLeft;
+	sf::Vector2f m_bottomRight;
+
 	virtual void showPlayerTile(const int x, const int y);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -38,7 +41,9 @@ public:
 
 	void setSize(const int height, const int width);
 
-	void setupField(const sf::Vector2f topLeft, const sf::Vector2f bottomRight, const int bombs);
+	bool setupField(const sf::Vector2f topLeft, const sf::Vector2f bottomRight, const int bombs);
+
+	Return click(const int localX, const int localY, const Click type);
 
 	sf::Color& defaultBackground();
 

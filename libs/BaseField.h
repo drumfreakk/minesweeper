@@ -9,6 +9,9 @@
 #include "Enums.h"
 
 
+#include <iostream>
+
+
 class BaseField {
 private:
 
@@ -37,20 +40,29 @@ protected:
 
 public:
 	BaseField(const int height, const int width)
-			: m_height(height), m_width(width), m_randXPos(0, width - 1), m_randYPos(0, height - 1), m_rndgen(static_cast<unsigned int>(std::time(nullptr)))
+			: m_height(height), m_width(width), m_randXPos(0, width - 1), m_randYPos(0, height - 1)
 	{
+
+		unsigned int seed = static_cast<unsigned int>(std::time(nullptr));
+
+//		seed = 1550865472;
+//
+//		std::cout << seed << '\n';
+
+		m_rndgen = std::mt19937(seed);
+
 		m_field = new int*[m_height];
 		for (int count = 0; count < m_height; ++count)
-			m_field[count] = new int[m_width]; // these are our columns
+			m_field[count] = new int[m_width];
 
 		m_visibleField = new int*[m_height];
 		for (int count = 0; count < m_height; ++count) {
-			m_visibleField[count] = new int[m_width]; // these are our columns
+			m_visibleField[count] = new int[m_width];
 		}
 
 		m_clicked = new bool*[m_height];
 		for (int count = 0; count < m_height; ++count) {
-			m_clicked[count] = new bool[m_width]; // these are our columns
+			m_clicked[count] = new bool[m_width];
 		}
 
 		for(int x = 0; x < m_width; x++){

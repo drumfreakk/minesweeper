@@ -1,5 +1,7 @@
 #include "SFMLField.h"
 
+#include <iostream>
+
 SFMLField::~SFMLField() {
 	delete[] m_vertices;
 }
@@ -35,8 +37,12 @@ void SFMLField::setSize(const int height, const int width) {
 	m_vertices = new sf::Vertex[m_height * m_width * m_vertexPerQuad];
 }
 
-void SFMLField::setupField(const sf::Vector2f topLeft, const sf::Vector2f bottomRight, const int bombs) {
-	BaseField::setupField(bombs);
+bool SFMLField::setupField(const sf::Vector2f topLeft, const sf::Vector2f bottomRight, const int bombs) {
+	if(!BaseField::setupField(bombs))
+		return false;
+
+	m_topLeft = topLeft;
+	m_bottomRight = bottomRight;
 
 	m_pixelHeight = bottomRight.y - topLeft.y;
 	m_pixelWidth = bottomRight.x - topLeft.x;
@@ -64,5 +70,25 @@ void SFMLField::setupField(const sf::Vector2f topLeft, const sf::Vector2f bottom
 		}
 	}
 
+	return true;
+}
+
+Return SFMLField::click(const int localX, const int localY, const Click type) {
+	float heightPerTile = m_pixelHeight / m_height;
+	float widthPerTile = m_pixelWidth / m_width;
+
+	int normX = localX - m_topLeft.x;
+	int normY = localY - m_topLeft.y;
+
+	int x = normX / widthPerTile;
+	int y = normY / heightPerTile;
+	if(x >= 0 && x < m_width && y >= 0 && y < m_height){
+//		std::cout << x << " " << y;
+		return BaseField::click(x, y, type);
+	}
+
+
+
+	return RETURN_FALSE_CLICK;
 }
 

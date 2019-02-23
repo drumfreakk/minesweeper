@@ -8,13 +8,29 @@
 
 #include <SFML/Graphics.hpp>
 
+//TODO: still doesnt work completely
+
 int main() {
 	sf::RenderWindow window(sf::VideoMode(450, 450), "Minesweeper");
 
+	sf::Font font;
+	font.loadFromFile("/home/kip/CLionProjects/minesweeper/assets/bitcrusher.ttf");
+
+	sf::Text text;
+	text.setFont(font);
+	text.setCharacterSize(100);
+	text.setFillColor(sf::Color::Black);
+	text.setStyle(sf::Text::Bold);
+	text.setPosition(100, 100);
+
+//	window.setFramerateLimit(20);
+
 	SFMLField field;
 
-	field.setSize(5, 5);
-	field.setupField(sf::Vector2f(50, 50), sf::Vector2f(400, 400), 3);
+	field.setSize(8, 8);
+	field.setupField(sf::Vector2f(50, 50), sf::Vector2f(400, 400), 5);
+
+	Return status = RETURN_ALIVE;
 
 	while (window.isOpen()) {
 
@@ -22,10 +38,36 @@ int main() {
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
+
+			if (event.type == sf::Event::MouseButtonPressed)
+			{
+				if(status == RETURN_ALIVE || status == RETURN_FALSE_CLICK || status == RETURN_ERROR) {
+					if (event.mouseButton.button == sf::Mouse::Right) {
+						status = field.click(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y,
+						                     CLICK_FLAG);
+					}
+					if (event.mouseButton.button == sf::Mouse::Left) {
+						status = field.click(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y,
+						                     CLICK_CLICK);
+					}
+				}
+			}
 		}
 
+
+		if(status == RETURN_DEAD) {
+			text.setString("You Lose!");
+		}
+		if(status == RETURN_WIN){
+			text.setString("You Win!");
+		}
+
+
 		window.clear(field.defaultBackground());
+
 		window.draw(field);
+		window.draw(text);
+
 		window.display();
 	}
 	return 0;
@@ -56,7 +98,7 @@ int getInput(std::string msg){
 			continue;
 
 
-		if(out < 0)
+		if(out < 1)
 			continue;
 
 		break;
@@ -67,11 +109,13 @@ int getInput(std::string msg){
 
 int main() {
 
-	int x = getInput("Field width: ");
-	int y = getInput("Field height: ");
-	int bombs = getInput("Amount of Bombs: ");
+	int x = 7;//getInput("Field width: ");
+	int y = 7;//getInput("Field height: ");
+	int bombs = 3;//getInput("Amount of Bombs: ");
 
-	TermField f(y, x);
+	TermField f(x, y);
+
+	f.setSize(x -2, y -2);
 
 	if(!f.setupField(bombs)){
 		std::cerr << " Too many bombs!";

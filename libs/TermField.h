@@ -17,9 +17,9 @@ private:
 	const char m_flag = 'f';
 	const char m_wrongFlag = 'w';
 	const char m_possibleFlag = '?';
-	const char m_explodedMine = 'e';
+	const char m_explodedMine = 'm';
 
-	std::string m_typeMsg = "CLick or Flag (c/f): ";
+	std::string m_typeMsg = "Click or Flag (c/f): ";
 	std::string m_xMsg = "x: ";
 	std::string m_yMsg = "y: ";
 
@@ -41,7 +41,21 @@ public:
 		}
 	}
 
+	TermField()
+		: BaseField()
+	{
+//		m_height = 1;
+//		m_width = 1;
+
+		m_playerField = new char*[m_height];
+		for (int count = 0; count < m_height; ++count) {
+			m_playerField[count] = new char[m_width]; // these are our columns
+		}
+	}
+
 	~TermField();
+
+	void setSize(const int x, const int y);
 
 	int getPosInput(Click type);
 	Click getTypeInput();

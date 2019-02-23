@@ -8,12 +8,30 @@ TermField::~TermField() {
 }
 
 std::ostream& operator<< (std::ostream &out, TermField &field) {
+//	for(int y = 0; y < field.m_height; y++){
+//		for(int x = 0; x < field.m_width; x++){
+//			out << '\t' << field.m_field[y][x];
+//		}
+//		out << "\n\n";
+//	}
+//
+//	out << "\n\n";
+
 	for(int y = 0; y < field.m_height; y++){
-		for(int x = 0; x < field.m_width; x++){     //m_width
+		for(int x = 0; x < field.m_width; x++){
 			out << '\t' << field.m_playerField[y][x];
 		}
 		out << "\n\n";
 	}
+
+	out << "\n\n";
+//
+//	for(int y = 0; y < field.m_height; y++){
+//		for(int x = 0; x < field.m_width; x++){
+//			out << '\t' << field.m_visibleField[y][x];
+//		}
+//		out << "\n\n";
+//	}
 	return out;
 }
 
@@ -121,6 +139,22 @@ Click TermField::getTypeInput(){
 		if(type == "f")
 			return CLICK_FLAG;
 
+	}
+}
+
+void TermField::setSize(const int x, const int y){
+	BaseField::setSize(x, y);
+
+	delete[] m_playerField;
+	m_playerField = new char*[m_height];
+	for (int count = 0; count < m_height; ++count) {
+		m_playerField[count] = new char[m_width]; // these are our columns
+	}
+
+	for(int x = 0; x < m_width; x++) {
+		for (int y = 0; y < m_height; y++) {
+			m_playerField[y][x] = m_line;
+		}
 	}
 }
 

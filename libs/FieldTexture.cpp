@@ -1,7 +1,7 @@
 #include "FieldTexture.h"
 
 bool FieldTexture::load() {
-	return loadFromFile("../assets/field_textures.png");
+	return loadFromFile("/home/kip/CLionProjects/minesweeper/assets/field_textures.png");
 }
 
 FieldTexture::~FieldTexture() {
