@@ -30,11 +30,20 @@ private:
 
 public:
 
+	friend std::ostream& operator<<(std::ostream& out, SFMLField &field);
+
 	SFMLField()
 			: BaseField()
 	{
 		m_vertices = new sf::Vertex[1];
 		m_texture.load();
+	}
+
+	SFMLField(const int height, const int width)
+		: BaseField(height, width)
+	{
+		m_texture.load();
+		m_vertices = new sf::Vertex[m_height * m_width * m_vertexPerQuad];
 	}
 
 	~SFMLField();

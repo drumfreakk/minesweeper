@@ -40,16 +40,12 @@ protected:
 
 public:
 	BaseField(const int height, const int width)
-			: m_height(height), m_width(width), m_randXPos(0, width - 1), m_randYPos(0, height - 1)
+			: m_height(height), m_width(width), m_randXPos(0, width - 1), m_randYPos(0, height - 1), m_rndgen(static_cast<unsigned int>(std::time(nullptr)))
 	{
 
-		unsigned int seed = static_cast<unsigned int>(std::time(nullptr));
-
-//		seed = 1550865472;
+//		unsigned int seed = static_cast<unsigned int>(std::time(nullptr));
 //
-//		std::cout << seed << '\n';
-
-		m_rndgen = std::mt19937(seed);
+//		m_rndgen = std::mt19937(seed);
 
 		m_field = new int*[m_height];
 		for (int count = 0; count < m_height; ++count)
@@ -70,6 +66,13 @@ public:
 				m_visibleField[y][x] = CODE_LINE;
 			}
 		}
+
+		for(int x = 0; x < m_width; x++){
+			for(int y = 0; y < m_height; y++){
+				m_field[y][x] = 0;
+			}
+		}
+
 	}
 
 	/// if you use this initializer, you must call setSize before anything else
@@ -98,6 +101,18 @@ public:
 	Return click(const int x, const int y, Click type);
 
 	void setSize(const int height, const int width);
+
+	void debug(const std::string msg, int **field){
+		std::cout << msg;
+
+		for(int y = 0; y < m_height; y++){
+			for(int x = 0; x < m_width; x++){
+				std::cout << '\t' << field[y][x];
+			}
+			std::cout << "\n\n";
+		}
+		std::cout << "\n\n\n\n";
+	}
 
 	int* operator[](const int row);
 

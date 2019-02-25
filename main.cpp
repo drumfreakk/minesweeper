@@ -8,7 +8,7 @@
 
 #include <SFML/Graphics.hpp>
 
-//TODO: still doesnt work completely
+//TODO: y and x seems to be mixed up somewhere
 
 int main() {
 	sf::RenderWindow window(sf::VideoMode(450, 450), "Minesweeper");
@@ -28,7 +28,9 @@ int main() {
 	SFMLField field;
 
 	field.setSize(8, 8);
-	field.setupField(sf::Vector2f(50, 50), sf::Vector2f(400, 400), 5);
+	field.setupField(sf::Vector2f(50, 50), sf::Vector2f(400, 400), 10);
+
+	std::cout << field << '\n';
 
 	Return status = RETURN_ALIVE;
 

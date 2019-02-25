@@ -19,6 +19,7 @@ void SFMLField::draw(sf::RenderTarget& target, sf::RenderStates states) const{
 }
 
 sf::Vertex &SFMLField::operator()(const int x, const int y, const int vertex) {
+	std::cout << "operator()\n";
 	return m_vertices[getIndex(x, y, vertex)];
 }
 
@@ -91,4 +92,12 @@ Return SFMLField::click(const int localX, const int localY, const Click type) {
 
 	return RETURN_FALSE_CLICK;
 }
+
+std::ostream &operator<<(std::ostream &out, SFMLField &field) {
+
+	field.debug("SFMLField::operator<<\n", field.m_field);
+
+	return out;
+}
+
 
