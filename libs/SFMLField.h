@@ -50,7 +50,7 @@ public:
 
 	void setSize(const int height, const int width);
 
-	bool setupField(const sf::Vector2f topLeft, const sf::Vector2f bottomRight, const int bombs);
+	void setWindowSize(const sf::Vector2f topLeft, const sf::Vector2f bottomRight);
 
 	Return click(const int localX, const int localY, const Click type);
 

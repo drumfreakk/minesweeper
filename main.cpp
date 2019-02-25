@@ -8,8 +8,6 @@
 
 #include <SFML/Graphics.hpp>
 
-//TODO: y and x seems to be mixed up somewhere
-
 int main() {
 	sf::RenderWindow window(sf::VideoMode(450, 450), "Minesweeper");
 
@@ -23,12 +21,11 @@ int main() {
 	text.setStyle(sf::Text::Bold);
 	text.setPosition(100, 100);
 
-//	window.setFramerateLimit(20);
-
 	SFMLField field;
 
 	field.setSize(8, 8);
-	field.setupField(sf::Vector2f(50, 50), sf::Vector2f(400, 400), 10);
+	field.setWindowSize(sf::Vector2f(50, 50), sf::Vector2f(400, 400));
+	field.setupField(10);
 
 	std::cout << field << '\n';
 

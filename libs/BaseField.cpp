@@ -21,7 +21,6 @@ int* BaseField::operator[](const int row){
 	return m_field[row];
 }
 
-//TODO: fix win system
 bool BaseField::setupField(const int bombs){
 	if(bombs > (m_height * m_width)){
 		return false;
@@ -32,45 +31,22 @@ bool BaseField::setupField(const int bombs){
 	bool nuffbombs = false;
 	int doneBombs = 0;
 
-	m_field[0][0] = CODE_MINE;
-	m_field[0][1] = CODE_MINE;
-	m_field[0][2] = CODE_MINE;
-	m_field[1][0] = CODE_MINE;
-	m_field[1][2] = CODE_MINE;
-	m_field[2][0] = CODE_MINE;
-	m_field[2][1] = CODE_MINE;
-	m_field[2][2] = CODE_MINE;
+	while(!nuffbombs){
+		int x = m_randXPos(m_rndgen);
+		int y = m_randYPos(m_rndgen);
 
-	m_field[0][3] = CODE_MINE;
-	m_field[0][4] = CODE_MINE;
-	m_field[0][5] = CODE_MINE;
-	m_field[2][3] = CODE_MINE;
-	m_field[2][4] = CODE_MINE;
-	m_field[2][5] = CODE_MINE;
+		if(m_field[y][x] != CODE_MINE) {
 
-	m_field[0][6] = CODE_MINE;
+			m_field[y][x] = CODE_MINE;
 
-	m_field[0][7] = CODE_MINE;
+			doneBombs += 1;
+		}
 
-	m_field[3][9] = CODE_MINE;
-	m_field[3][8] = CODE_MINE;
-	m_field[3][7] = CODE_MINE;
-//	while(!nuffbombs){
-//		int x = m_randXPos(m_rndgen);
-//		int y = m_randYPos(m_rndgen);
-//
-//		if(m_field[y][x] != CODE_MINE) {
-//
-//			m_field[y][x] = CODE_MINE;
-//
-//			doneBombs += 1;
-//		}
-//
-//		if(doneBombs >= m_bombs){
-//			nuffbombs = true;
-//		}
-//
-//	}
+		if(doneBombs >= m_bombs){
+			nuffbombs = true;
+		}
+
+	}
 
 	for(int x = 0; x < m_width; x++) {
 		for(int y = 0; y < m_height; y++) {
@@ -259,4 +235,18 @@ void BaseField::setSize(const int height, const int width) {
 			m_field[y][x] = 0;
 		}
 	}
+}
+
+void BaseField::debug(const std::string msg, int **field){
+//	{
+//		std::cout << msg;
+//
+//		for(int y = 0; y < m_height; y++){
+//			for(int x = 0; x < m_width; x++){
+//				std::cout << '\t' << field[y][x];
+//			}
+//			std::cout << "\n\n";
+//		}
+//		std::cout << "\n\n\n\n";
+//	}
 }
