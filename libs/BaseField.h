@@ -94,7 +94,7 @@ public:
 
 	virtual bool setupField(const int bombs);
 
-	Return click(const int x, const int y, Click type);
+	virtual Return click(const int x, const int y, Click type);
 
 	void setSize(const int height, const int width);
 
