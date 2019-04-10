@@ -9,27 +9,22 @@
 #include <SFML/Graphics.hpp>
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(450, 450), "Minesweeper");
+	sf::RenderWindow window(sf::VideoMode(700, 700), "Minesweeper");
 
-	sf::Font font;
-	font.loadFromFile("/home/kip/CLionProjects/minesweeper/assets/bitcrusher.ttf");
+	SFMLGame field;
 
-	sf::Text text;
-	text.setFont(font);
-	text.setCharacterSize(100);
-	text.setFillColor(sf::Color::Black);
-	text.setStyle(sf::Text::Bold);
-	text.setPosition(100, 100);
+	field.setSize(20, 20);
+	field.setWindowSize(sf::Vector2f(50, 50), sf::Vector2f(650, 650));
+	field.setupField(50);
 
-	SFMLField field;
+	field.font.loadFromFile("/home/kip/CLionProjects/minesweeper/assets/bitcrusher.ttf");
 
-	field.setSize(8, 8);
-	field.setWindowSize(sf::Vector2f(50, 50), sf::Vector2f(400, 400));
-	field.setupField(10);
-
-	std::cout << field << '\n';
+	sf::Text& endText = field.endText;
+	sf::Text& bombs = field.bombs;
 
 	Return status = RETURN_ALIVE;
+
+	bombs.setString(std::to_string(field.getBombsLeft()) + "/" + std::to_string(field.getBombs()));
 
 	while (window.isOpen()) {
 
@@ -50,23 +45,21 @@ int main() {
 						                     CLICK_CLICK);
 					}
 				}
+				bombs.setString(std::to_string(field.getBombsLeft()) + "/" + std::to_string(field.getBombs()));
 			}
 		}
 
 
 		if(status == RETURN_DEAD) {
-			text.setString("You Lose!");
+			endText.setString("You Lose!");
 		}
 		if(status == RETURN_WIN){
-			text.setString("You Win!");
+			endText.setString("You Win!");
 		}
-
 
 		window.clear(field.defaultBackground());
 
 		window.draw(field);
-		window.draw(text);
-
 		window.display();
 	}
 	return 0;

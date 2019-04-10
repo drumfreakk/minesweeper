@@ -27,6 +27,7 @@ bool BaseField::setupField(const int bombs){
 	}
 
 	BaseField::m_bombs = bombs;
+	BaseField::m_bombsLeft = 0;
 
 	bool nuffbombs = false;
 	int doneBombs = 0;
@@ -103,31 +104,63 @@ Return BaseField::click(const int x, const int y, Click type) {
 }
 
 Return BaseField::shovelWithMines(const int x, const int y){
-	if(m_clicked[y][x] == false && m_visibleField[y][x] != CODE_FLAG && m_visibleField[y][x] != CODE_POSSIBLE_FLAG) {
-		if (m_field[y][x] == CODE_MINE) {
-			m_clicked[y][x] = true;
+	if(m_visibleField[y][x] != CODE_FLAG && m_visibleField[y][x] != CODE_POSSIBLE_FLAG) {
+		if (!m_clicked[y][x]) {
+			if (m_field[y][x] == CODE_MINE) {
+				m_clicked[y][x] = true;
 
-			showTilesOnDeath(x, y);
+				showTilesOnDeath(x, y);
 
-			return RETURN_DEAD;
+				return RETURN_DEAD;
+			} else {
+				shovelNums(x, y);
+				return RETURN_ALIVE;
+			}
 		} else {
-			shovelNums(x, y);
-			return RETURN_ALIVE;
+			shovelFromNum(x, y);
+			return RETURN_FALSE_CLICK;
 		}
 	} else {
 		return RETURN_FALSE_CLICK;
 	}
-
 }
+
+Return BaseField::shovelFromNum(const int x, const int y) {
+	int flaggedBombs = 0;
+	for (int xb = x - 1; xb < x + 2; xb++) {
+		if (xb >= 0 && xb < m_width) {
+			for (int yb = y - 1; yb < y + 2; yb++) {
+				if (yb >= 0 && yb < m_height && m_visibleField[yb][xb] == CODE_FLAG) {
+					flaggedBombs += 1;
+				}
+			}
+		}
+	}
+	if(flaggedBombs == m_field[y][x]){
+		for (int xb = x - 1; xb < x + 2; xb++) {
+			if (xb >= 0 && xb < m_width) {
+				for (int yb = y - 1; yb < y + 2; yb++) {
+					if (yb >= 0 && yb < m_height && !m_clicked[yb][xb]) {
+						if(shovelWithMines(xb, yb) == RETURN_DEAD){
+							return RETURN_DEAD;
+						}
+					}
+				}
+			}
+		}
+	}
+	return RETURN_ALIVE;
+}
+
 
 void BaseField::shovelNums(const int x, const int y){
 	m_clicked[y][x] = true;
 	showTile(x, y);
-	if(m_field[y][x] == 0){
-		for(int xb = x - 1; xb < x + 2; xb++){
-			if(xb >= 0 && xb < m_width) {
+	if (m_field[y][x] == 0) {
+		for (int xb = x - 1; xb < x + 2; xb++) {
+			if (xb >= 0 && xb < m_width) {
 				for (int yb = y - 1; yb < y + 2; yb++) {
-					if(yb >= 0 && yb < m_height && m_clicked[yb][xb] == false) {
+					if (yb >= 0 && yb < m_height && !m_clicked[yb][xb]) {
 						shovelNums(xb, yb);
 					}
 				}
@@ -137,13 +170,26 @@ void BaseField::shovelNums(const int x, const int y){
 }
 
 Return BaseField::flag(const int x, const int y){
-	if(m_clicked[y][x] == false){
-		if(m_visibleField[y][x] == CODE_LINE) {
-			m_visibleField[y][x] = CODE_FLAG;
-		} else if(m_visibleField[y][x] == CODE_FLAG){
+	if(!m_clicked[y][x]){
+		if(m_bombsLeft < m_bombs) {
+			if (m_visibleField[y][x] == CODE_LINE) {
+				m_visibleField[y][x] = CODE_FLAG;
+				m_bombsLeft += 1;
+			} else if(m_visibleField[y][x] == CODE_FLAG){
+				m_visibleField[y][x] = CODE_POSSIBLE_FLAG;
+				m_bombsLeft -= 1;
+			} else if(m_visibleField[y][x] == CODE_POSSIBLE_FLAG){
+				m_visibleField[y][x] = CODE_LINE;
+			}
+		} else if (m_visibleField[y][x] == CODE_LINE) {
 			m_visibleField[y][x] = CODE_POSSIBLE_FLAG;
-		} else if(m_visibleField[y][x] == CODE_POSSIBLE_FLAG){
-			m_visibleField[y][x] = CODE_LINE;
+		} else {
+			if(m_visibleField[y][x] == CODE_FLAG){
+				m_visibleField[y][x] = CODE_POSSIBLE_FLAG;
+				m_bombsLeft -= 1;
+			} else if(m_visibleField[y][x] == CODE_POSSIBLE_FLAG){
+				m_visibleField[y][x] = CODE_LINE;
+			}
 		}
 		showPlayerTile(x, y);
 		return RETURN_ALIVE;
@@ -238,15 +284,25 @@ void BaseField::setSize(const int height, const int width) {
 }
 
 void BaseField::debug(const std::string msg, int **field){
-//	{
-//		std::cout << msg;
-//
-//		for(int y = 0; y < m_height; y++){
-//			for(int x = 0; x < m_width; x++){
-//				std::cout << '\t' << field[y][x];
-//			}
-//			std::cout << "\n\n";
-//		}
-//		std::cout << "\n\n\n\n";
-//	}
+#ifdef NDEBUG
+	{
+		std::cout << msg;
+
+		for(int y = 0; y < m_height; y++){
+			for(int x = 0; x < m_width; x++){
+				std::cout << '\t' << field[y][x];
+			}
+			std::cout << "\n\n";
+		}
+		std::cout << "\n\n\n\n";
+	}
+#endif
+}
+
+int BaseField::getBombs(){
+	return m_bombs;
+}
+
+int BaseField::getBombsLeft(){
+	return m_bombsLeft;
 }

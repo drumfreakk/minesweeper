@@ -10,7 +10,6 @@
 class SFMLField : public BaseField, public sf::Drawable, public sf::Transformable {
 private:
 	sf::Vertex *m_vertices;
-	FieldTexture m_texture;
 
 	sf::Color m_defaultBackground = sf::Color(183, 183, 183, 1);
 
@@ -24,9 +23,12 @@ private:
 
 	virtual void showPlayerTile(const int x, const int y);
 
+	int getIndex(const int x, const int y, const int vertex);
+
+protected:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-	int getIndex(const int x, const int y, const int vertex);
+	FieldTexture m_texture;
 
 public:
 

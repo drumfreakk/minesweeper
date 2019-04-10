@@ -4,6 +4,7 @@
 #include "BaseField.h"
 #include "TermField.h"
 #include "SFMLField.h"
+#include "SFMLGame.h"
 #include "Enums.h"
 
 #endif

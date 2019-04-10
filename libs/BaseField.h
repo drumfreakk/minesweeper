@@ -16,6 +16,7 @@ class BaseField {
 private:
 
 	int m_bombs;
+	int m_bombsLeft;
 
 	std::mt19937 m_rndgen;
 	std::uniform_int_distribution<> m_randXPos;
@@ -37,6 +38,7 @@ protected:
 	void shovelNums(const int x, const int y);
 	Return flag(const int x, const int y);
 	Return shovelWithMines(const int x, const int y);
+	Return shovelFromNum(const int x, const int y);
 
 public:
 	BaseField(const int height, const int width)
@@ -97,6 +99,9 @@ public:
 	virtual Return click(const int x, const int y, Click type);
 
 	void setSize(const int height, const int width);
+
+	int getBombs();
+	int getBombsLeft();
 
 	void debug(const std::string msg, int **field);
 
