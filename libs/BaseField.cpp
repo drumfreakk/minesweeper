@@ -125,26 +125,30 @@ Return BaseField::shovelWithMines(const int x, const int y){
 	}
 }
 
-Return BaseField::shovelFromNum(const int x, const int y) {
+Return BaseField::shovelFromNum(const int x, const int y){
 	int flaggedBombs = 0;
-	for (int xb = x - 1; xb < x + 2; xb++) {
-		if (xb >= 0 && xb < m_width) {
-			for (int yb = y - 1; yb < y + 2; yb++) {
-				if (yb >= 0 && yb < m_height && m_visibleField[yb][xb] == CODE_FLAG) {
-					flaggedBombs += 1;
+	int aroundPosses[8][2] = {{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}};
+	int count = 0;
+	for (int xb = x - 1; xb < x + 2; xb++){
+		if (xb >= 0 && xb < m_width){
+			for (int yb = y - 1; yb < y + 2; yb++){
+				if (yb >= 0 && yb < m_height){
+					if(m_visibleField[yb][xb] == CODE_FLAG){
+						flaggedBombs += 1;
+					}
+					aroundPosses[count][0] = xb;
+					aroundPosses[count][1] = yb;
+					count += 1;
 				}
 			}
 		}
 	}
-	if(flaggedBombs == m_field[y][x]){
-		for (int xb = x - 1; xb < x + 2; xb++) {
-			if (xb >= 0 && xb < m_width) {
-				for (int yb = y - 1; yb < y + 2; yb++) {
-					if (yb >= 0 && yb < m_height && !m_clicked[yb][xb]) {
-						if(shovelWithMines(xb, yb) == RETURN_DEAD){
-							return RETURN_DEAD;
-						}
-					}
+	for(int z = 0; z < 8; z++){
+		if(flaggedBombs == m_field[y][x]){
+			int pos[2] = {aroundPosses[z][0], aroundPosses[z][1]};
+			if(pos[0] != -1 && pos[1] != -1){
+				if(!m_clicked[pos[1]][pos[0]] && shovelWithMines(pos[0], pos[1]) == RETURN_DEAD){
+					return RETURN_DEAD;
 				}
 			}
 		}
@@ -152,15 +156,14 @@ Return BaseField::shovelFromNum(const int x, const int y) {
 	return RETURN_ALIVE;
 }
 
-
 void BaseField::shovelNums(const int x, const int y){
 	m_clicked[y][x] = true;
 	showTile(x, y);
-	if (m_field[y][x] == 0) {
-		for (int xb = x - 1; xb < x + 2; xb++) {
+	if (m_field[y][x] == 0){
+		for (int xb = x - 1; xb < x + 2; xb++){
 			if (xb >= 0 && xb < m_width) {
-				for (int yb = y - 1; yb < y + 2; yb++) {
-					if (yb >= 0 && yb < m_height && !m_clicked[yb][xb]) {
+				for (int yb = y - 1; yb < y + 2; yb++){
+					if (yb >= 0 && yb < m_height && !m_clicked[yb][xb]){
 						shovelNums(xb, yb);
 					}
 				}
