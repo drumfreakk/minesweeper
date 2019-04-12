@@ -8,15 +8,6 @@ TermField::~TermField() {
 }
 
 std::ostream& operator<< (std::ostream &out, TermField &field) {
-//	for(int y = 0; y < field.m_height; y++){
-//		for(int x = 0; x < field.m_width; x++){
-//			out << '\t' << field.m_field[y][x];
-//		}
-//		out << "\n\n";
-//	}
-//
-//	out << "\n\n";
-
 	for(int y = 0; y < field.m_height; y++){
 		for(int x = 0; x < field.m_width; x++){
 			out << '\t' << field.m_playerField[y][x];
@@ -25,13 +16,6 @@ std::ostream& operator<< (std::ostream &out, TermField &field) {
 	}
 
 	out << "\n\n";
-//
-//	for(int y = 0; y < field.m_height; y++){
-//		for(int x = 0; x < field.m_width; x++){
-//			out << '\t' << field.m_visibleField[y][x];
-//		}
-//		out << "\n\n";
-//	}
 	return out;
 }
 
@@ -99,8 +83,7 @@ int TermField::getPosInput(Click type){
 		max = m_width;
 	}
 
-	while (1)
-	{
+	while(true){
 
 		std::cout << msg;
 		std::cin >> pos;
@@ -117,8 +100,9 @@ int TermField::getPosInput(Click type){
 			continue;
 
 
-		if(pos < 0 || pos > max)
+		if(pos < 0 || pos > max){
 			continue;
+		}
 
 		break;
 	}
@@ -129,7 +113,7 @@ int TermField::getPosInput(Click type){
 Click TermField::getTypeInput(){
 	std::string type;
 
-	while (1)
+	while (true)
 	{
 		std::cout << m_typeMsg;
 		std::getline(std::cin, type);
@@ -151,21 +135,9 @@ void TermField::setSize(const int x, const int y){
 		m_playerField[count] = new char[m_width]; // these are our columns
 	}
 
-	for(int x = 0; x < m_width; x++) {
-		for (int y = 0; y < m_height; y++) {
-			m_playerField[y][x] = m_line;
+	for(int xb = 0; xb < m_width; xb++) {
+		for (int yb = 0; yb < m_height; yb++) {
+			m_playerField[yb][xb] = m_line;
 		}
 	}
-}
-
-std::string& TermField::typeMsg(){
-	return m_typeMsg;
-}
-
-std::string& TermField::xMsg(){
-	return m_xMsg;
-}
-
-std::string& TermField::yMsg(){
-	return m_yMsg;
 }

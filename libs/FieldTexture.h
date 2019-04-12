@@ -48,17 +48,17 @@ public:
 				add.y = 0;
 
 				if(v == 1 || v == 2){
-					add.x = 32;
+					add.x = 256;
 				}
 				if(v == 2 || v == 3){
-					add.y = 32;
+					add.y = 256;
 				}
 
 				m_texCoords[i][v] = sf::Vector2f(curPos + add.x, add.y);
 
 			}
 
-			curPos += 32;
+			curPos += 256;
 		}
 	}
 
@@ -66,7 +66,7 @@ public:
 
 	bool load();
 
-	sf::Vector2f* operator[](const int index);
+	sf::Vector2f* operator[](int index);
 
 };
 

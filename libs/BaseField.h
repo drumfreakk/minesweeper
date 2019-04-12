@@ -15,8 +15,8 @@
 class BaseField {
 private:
 
-	int m_bombs;
-	int m_bombsLeft;
+	int m_bombs = 0;
+	int m_bombsLeft = 0;
 
 	std::mt19937 m_rndgen;
 	std::uniform_int_distribution<> m_randXPos;
@@ -30,15 +30,15 @@ protected:
 	int **m_visibleField;
 	bool **m_clicked;
 
-	void showTile(const int x, const int y);
-	void showTilesOnDeath(const int x, const int y);
+	void showTile(int x, int y);
+	void showTilesOnDeath(int x, int y);
 
-	virtual void showPlayerTile(const int x, const int y) = 0;
+	virtual void showPlayerTile(int x, int y) = 0;
 
-	void shovelNums(const int x, const int y);
-	Return flag(const int x, const int y);
-	Return shovelWithMines(const int x, const int y);
-	Return shovelFromNum(const int x, const int y);
+	void shovelNums(int x, int y);
+	Return flag(int x, int y);
+	Return shovelWithMines(int x, int y);
+	Return shovelFromNum(int x, int y);
 
 public:
 	BaseField(const int height, const int width)
@@ -94,18 +94,18 @@ public:
 
 	~BaseField();
 
-	virtual bool setupField(const int bombs);
+	virtual bool setupField(int bombs);
 
-	virtual Return click(const int x, const int y, Click type);
+	virtual Return click(int x, int y, Click type);
 
-	void setSize(const int height, const int width);
+	void setSize(int height, int width);
 
 	int getBombs();
 	int getBombsLeft();
 
-	void debug(const std::string msg, int **field);
+	void debug(std::string msg, int **field);
 
-	int* operator[](const int row);
+	int* operator[](int row);
 
 };
 

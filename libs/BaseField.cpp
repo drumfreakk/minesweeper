@@ -32,6 +32,7 @@ bool BaseField::setupField(const int bombs){
 	bool nuffbombs = false;
 	int doneBombs = 0;
 
+#ifndef TEXTURETEST
 	while(!nuffbombs){
 		int x = m_randXPos(m_rndgen);
 		int y = m_randYPos(m_rndgen);
@@ -48,6 +49,36 @@ bool BaseField::setupField(const int bombs){
 		}
 
 	}
+#endif
+
+#ifdef TEXTURETEST
+	m_field[0][0] = CODE_MINE;
+	m_field[0][1] = CODE_MINE;
+	m_field[0][2] = CODE_MINE;
+	m_field[1][0] = CODE_MINE;
+	m_field[1][2] = CODE_MINE;
+	m_field[2][0] = CODE_MINE;
+	m_field[2][1] = CODE_MINE;
+	m_field[2][2] = CODE_MINE;
+
+	m_field[0][3] = CODE_MINE;
+	m_field[0][4] = CODE_MINE;
+	m_field[0][5] = CODE_MINE;
+	m_field[2][3] = CODE_MINE;
+	m_field[2][4] = CODE_MINE;
+	m_field[2][5] = CODE_MINE;
+
+	m_field[0][6] = CODE_MINE;
+	m_field[0][7] = CODE_MINE;
+	m_field[0][8] = CODE_MINE;
+
+	m_field[5][0] = CODE_MINE;
+	m_field[5][1] = CODE_MINE;
+	m_field[6][1] = CODE_MINE;
+	m_field[7][0] = CODE_MINE;
+	m_field[7][1] = CODE_MINE;
+#endif
+
 
 	for(int x = 0; x < m_width; x++) {
 		for(int y = 0; y < m_height; y++) {
@@ -85,12 +116,12 @@ Return BaseField::click(const int x, const int y, Click type) {
 	int doneBombs = 0;
 	bool falseFlags = false;
 
-	for(int x = 0; x < m_width; x++){
-		for(int y = 0; y < m_height; y++){
-			if(m_field[y][x] == CODE_MINE && m_visibleField[y][x] == CODE_FLAG){
+	for(int xb = 0; xb < m_width; xb++){
+		for(int yb = 0; yb < m_height; yb++){
+			if(m_field[yb][xb] == CODE_MINE && m_visibleField[yb][xb] == CODE_FLAG){
 				doneBombs += 1;
 			}
-			if((m_visibleField[y][x] == CODE_FLAG || m_visibleField[y][x] == CODE_POSSIBLE_FLAG) && m_field[y][x] != CODE_MINE){
+			if((m_visibleField[yb][xb] == CODE_FLAG || m_visibleField[yb][xb] == CODE_POSSIBLE_FLAG) && m_field[yb][xb] != CODE_MINE){
 				falseFlags = true;
 			}
 		}
@@ -143,9 +174,8 @@ Return BaseField::shovelFromNum(const int x, const int y){
 			}
 		}
 	}
-	for(int z = 0; z < 8; z++){
+	for(int* pos : aroundPosses){
 		if(flaggedBombs == m_field[y][x]){
-			int pos[2] = {aroundPosses[z][0], aroundPosses[z][1]};
 			if(pos[0] != -1 && pos[1] != -1){
 				if(!m_clicked[pos[1]][pos[0]] && shovelWithMines(pos[0], pos[1]) == RETURN_DEAD){
 					return RETURN_DEAD;
@@ -221,14 +251,12 @@ void BaseField::showTilesOnDeath(const int x, const int y) {
 
 		}
 	}
-	//showTile(x, y);
 }
 
 void BaseField::showTile(const int x, const int y){
 	if(m_field[y][x] > CODE_MINE){
 		m_visibleField[y][x] = m_field[y][x];
 	}
-
 	showPlayerTile(x, y);
 }
 
@@ -287,18 +315,16 @@ void BaseField::setSize(const int height, const int width) {
 }
 
 void BaseField::debug(const std::string msg, int **field){
-#ifdef NDEBUG
-	{
-		std::cout << msg;
+#ifndef NDEBUG
+	std::cout << msg;
 
-		for(int y = 0; y < m_height; y++){
-			for(int x = 0; x < m_width; x++){
-				std::cout << '\t' << field[y][x];
-			}
-			std::cout << "\n\n";
+	for(int y = 0; y < m_height; y++){
+		for(int x = 0; x < m_width; x++){
+			std::cout << '\t' << field[y][x];
 		}
-		std::cout << "\n\n\n\n";
+			std::cout << "\n\n";
 	}
+	std::cout << "\n\n\n\n";
 #endif
 }
 

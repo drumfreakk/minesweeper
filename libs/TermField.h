@@ -23,7 +23,7 @@ private:
 	std::string m_xMsg = "x: ";
 	std::string m_yMsg = "y: ";
 
-	virtual void showPlayerTile(const int x, const int y);
+	virtual void showPlayerTile(int x, int y);
 
 public:
 	TermField(const int height, const int width)
@@ -44,8 +44,6 @@ public:
 	TermField()
 		: BaseField()
 	{
-//		m_height = 1;
-//		m_width = 1;
 
 		m_playerField = new char*[m_height];
 		for (int count = 0; count < m_height; ++count) {
@@ -55,14 +53,10 @@ public:
 
 	~TermField();
 
-	void setSize(const int x, const int y);
+	void setSize(int x, int y);
 
 	int getPosInput(Click type);
 	Click getTypeInput();
-
-	std::string& typeMsg();
-	std::string& xMsg();
-	std::string& yMsg();
 
 	friend std::ostream& operator<< (std::ostream &out, TermField &field);
 };

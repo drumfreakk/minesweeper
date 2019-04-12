@@ -21,9 +21,9 @@ private:
 	sf::Vector2f m_topLeft;
 	sf::Vector2f m_bottomRight;
 
-	virtual void showPlayerTile(const int x, const int y);
+	virtual void showPlayerTile(int x, int y);
 
-	int getIndex(const int x, const int y, const int vertex);
+	int getIndex(int x, int y, int vertex);
 
 protected:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -50,15 +50,15 @@ public:
 
 	~SFMLField();
 
-	void setSize(const int height, const int width);
+	void setSize(int height, int width);
 
-	void setWindowSize(const sf::Vector2f topLeft, const sf::Vector2f bottomRight);
+	void setWindowSize(sf::Vector2f topLeft, sf::Vector2f bottomRight);
 
-	Return click(const int localX, const int localY, const Click type);
+	Return click(int localX, int localY, Click type);
 
 	sf::Color& defaultBackground();
 
-	sf::Vertex& operator()(const int x, const int y, const int vertex);
+	sf::Vertex& operator()(int x, int y, int vertex);
 
 };
 
