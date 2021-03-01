@@ -6,7 +6,7 @@
 #include <cctype>
 #include <string>
 
-#include "Enums.h"
+#include "enums.h"
 
 
 #include <iostream>

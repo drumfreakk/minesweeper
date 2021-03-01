@@ -5,8 +5,8 @@
 #include <cctype>
 #include <string>
 
-#include "Enums.h"
-#include "BaseField.h"
+#include "enums.h"
+#include "basefield.h"
 
 class TermField : public BaseField {
 private:

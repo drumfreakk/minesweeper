@@ -1,4 +1,4 @@
-#include "BaseField.h"
+#include "../include/basefield.h"
 
 BaseField::~BaseField() {
 	for (int count = 0; count < m_height; ++count)

@@ -1,4 +1,4 @@
-#include "TermField.h"
+#include "../include/termfield.h"
 
 TermField::~TermField() {
 	for (int count = 0; count < m_height; ++count)
