@@ -1,74 +1,6 @@
 #include <iostream>
 #include "libs/Field.h"
 
-#define SFML
-
-
-#ifdef SFML
-
-#include <SFML/Graphics.hpp>
-
-int main() {
-	sf::RenderWindow window(sf::VideoMode(700, 700), "Minesweeper");
-
-	SFMLGame field;
-
-	field.setSize(20, 20);
-	field.setWindowSize(sf::Vector2f(50, 50), sf::Vector2f(650, 650));
-	field.setupField(50);
-
-	field.font.loadFromFile("/home/kip/CLionProjects/minesweeper/assets/bitcrusher.ttf");
-
-	sf::Text& endText = field.endText;
-	sf::Text& bombs = field.bombs;
-
-	Return status = RETURN_ALIVE;
-
-	bombs.setString(std::to_string(field.getBombsLeft()) + "/" + std::to_string(field.getBombs()));
-
-	while (window.isOpen()) {
-
-		sf::Event event;
-		while (window.pollEvent(event)) {
-			if (event.type == sf::Event::Closed)
-				window.close();
-
-			if (event.type == sf::Event::MouseButtonPressed)
-			{
-				if(status == RETURN_ALIVE || status == RETURN_FALSE_CLICK || status == RETURN_ERROR) {
-					if (event.mouseButton.button == sf::Mouse::Right) {
-						status = field.click(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y,
-						                     CLICK_FLAG);
-					}
-					if (event.mouseButton.button == sf::Mouse::Left) {
-						status = field.click(sf::Mouse::getPosition(window).x, sf::Mouse::getPosition(window).y,
-						                     CLICK_CLICK);
-					}
-				}
-				bombs.setString(std::to_string(field.getBombsLeft()) + "/" + std::to_string(field.getBombs()));
-			}
-		}
-
-
-		if(status == RETURN_DEAD) {
-			endText.setString("You Lose!");
-		}
-		if(status == RETURN_WIN){
-			endText.setString("You Win!");
-		}
-
-		window.clear(field.defaultBackground());
-
-		window.draw(field);
-		window.display();
-	}
-	return 0;
-}
-
-#endif
-
-#ifdef TERM
-
 int getInput(std::string msg){
 	int out;
 
@@ -142,5 +74,4 @@ int main() {
 	return 0;
 }
 
-#endif
 
