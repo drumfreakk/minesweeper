@@ -5,7 +5,7 @@ project(minesweeper)
 set(CMAKE_CXX_STANDARD 17)
 
 add_executable(minesweeper
-				src/main.cpp
+				src/main.c
 				include/field.h
 				include/enums.h
 				src/basefield.cpp

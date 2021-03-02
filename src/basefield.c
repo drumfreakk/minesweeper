@@ -1,4 +1,8 @@
-#include "../include/basefield.h"
+#include "basefield.h"
+
+
+
+/*
 
 BaseField::~BaseField() {
 	for (int count = 0; count < m_height; ++count)
@@ -335,3 +339,6 @@ int BaseField::getBombs(){
 int BaseField::getBombsLeft(){
 	return m_bombsLeft;
 }
+
+
+*/

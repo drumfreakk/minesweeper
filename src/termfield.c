@@ -1,5 +1,7 @@
-#include "../include/termfield.h"
+#include "termfield.h"
 
+
+/*
 TermField::~TermField() {
 	for (int count = 0; count < m_height; ++count)
 		delete[] m_playerField[count];
@@ -141,3 +143,5 @@ void TermField::setSize(const int x, const int y){
 		}
 	}
 }
+
+*/

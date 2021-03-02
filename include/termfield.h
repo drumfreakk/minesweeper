@@ -1,13 +1,14 @@
 #ifndef MINESWEEPER_TERMFIELD_H
 #define MINESWEEPER_TERMFIELD_H
 
-#include <iostream>
-#include <cctype>
-#include <string>
+//#include <iostream>
+//#include <cctype>
+//#include <string>
 
 #include "enums.h"
 #include "basefield.h"
 
+/*
 class TermField : public BaseField {
 private:
 	char **m_playerField;
@@ -60,6 +61,6 @@ public:
 
 	friend std::ostream& operator<< (std::ostream &out, TermField &field);
 };
-
+*/
 
 #endif

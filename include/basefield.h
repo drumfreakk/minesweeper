@@ -1,17 +1,17 @@
 #ifndef MINESWEEPER_BASEFIELD_H
 #define MINESWEEPER_BASEFIELD_H
 
-#include <random>
-#include <ctime>
-#include <cctype>
-#include <string>
+//#include <random>
+//#include <ctime>
+//#include <cctype>
+//#include <string>
 
 #include "enums.h"
 
 
-#include <iostream>
+//#include <iostream>
 
-
+/*
 class BaseField {
 private:
 
@@ -108,5 +108,5 @@ public:
 	int* operator[](int row);
 
 };
-
+*/
 #endif
