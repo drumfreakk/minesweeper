@@ -81,33 +81,22 @@ bool setup_field(basefield* base, int bombs){ // Virtual
 		if(base->p_field[y][x] != CODE_MINE) {
 
 			base->p_field[y][x] = CODE_MINE;
-
 			done_bombs++;
-		}
-
-		if(done_bombs >= bombs){
-			break;
-		}
-	}
-
-
-// Give all non-bomb tiles the number of bombs around it
-	for(int x = 0; x < base->p_width; x++) {
-		for(int y = 0; y < base->p_height; y++) {
-			if(base->p_field[y][x] == CODE_MINE){
-
-				for(int xb = x - 1; xb < x + 2; xb++){
-					if(xb >= 0 && xb < base->p_width) {
-
-						for (int yb = y - 1; yb < y + 2; yb++) {
-							if(yb >= 0 && yb < base->p_height && base->p_field[yb][xb] != CODE_MINE) {
-
-								base->p_field[yb][xb]++;
-							}
+		
+			// Set the number of mines around each one
+			for(int xb = x - 1; xb <= x + 1; xb++){
+				if(xb >= 0 && xb < base->p_width) {
+					for (int yb = y - 1; yb <= y + 1; yb++) {
+						if(yb >= 0 && yb < base->p_height && base->p_field[yb][xb] != CODE_MINE) {
+							base->p_field[yb][xb]++;
 						}
 					}
 				}
 			}
+		}
+
+		if(done_bombs >= bombs){
+			break;
 		}
 	}
 
