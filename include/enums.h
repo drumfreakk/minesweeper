@@ -6,7 +6,8 @@ typedef enum{
 	RETURN_DEAD,
 	RETURN_FALSE_CLICK,
 	RETURN_ERROR,
-	RETURN_WIN
+	RETURN_WIN,
+	RETURN_NOERR
 } ret_code;
 
 typedef enum{

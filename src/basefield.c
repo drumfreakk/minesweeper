@@ -1,29 +1,131 @@
 #include "basefield.h"
 
+// Protected functions
+/*static void base_showTile(basefield* base, int x, int y);
+static void base_showTilesOnDeath(basefield* base, int x, int y);
+
+static ret_code base_flag(basefield* base, int x, int y);
+static ret_code base_shovelWithMines(basefield* base, int x, int y);
+static ret_code base_shovelFromNum(basefield* base, int x, int y);
+
+static void base_showPlayerTile(basefield* base, int x, int y); // Virtual
+*/
+
+
+//TODO Error handling
+ret_code initialize(basefield* base, int height, int width){ // Is using a pointer right here?
+	base->p_height = height;
+	base->p_width = width;
+
+	//randxpos = 0, width-1
+	//randypos = 0, height-1
+
+	base->p_field = (int**) malloc(height * sizeof(int*));
+	base->p_visible_field = (int**) malloc(height * sizeof(int*));
+	base->p_clicked = (bool**) malloc(height * sizeof(bool*));
+
+	for (int i = 0; i < height; i++){
+		base->p_field[i] = (int*) malloc(width * sizeof(int));
+		base->p_visible_field[i] = (int*) malloc(width * sizeof(int));	
+		base->p_clicked[i] = (bool*) malloc(width * sizeof(bool));
+	}
+
+
+	for(int x = 0; x < width; x++){
+		for(int y = 0; y < height; y++) {
+			base->p_visible_field[y][x] = CODE_LINE;
+			base->p_field[y][x] = 0;
+		}
+	}
+
+	srandom(time(NULL));
+
+	return RETURN_NOERR;
+}
+
+ret_code destruct(basefield* base){
+	for (int i = 0; i < base->p_height; i++){
+		free(base->p_field[i]);
+		free(base->p_visible_field[i]);
+		free(base->p_clicked[i]);
+	}
+	free(base->p_field);
+	free(base->p_visible_field);
+	free(base->p_clicked);
+
+	base->p_field = NULL;
+	base->p_visible_field = NULL;
+	base->p_clicked = NULL;
+
+	return RETURN_NOERR;
+}
+
+int* get_element(basefield* base, int x, int y){
+	return &(base->p_field[y][x]);
+}
+
+bool setup_field(basefield* base, int bombs){ // Virtual
+	if(bombs > (base->p_height * base->p_width)){
+		return false;
+	}
+
+	base->pvt_bombs = bombs;
+	base->pvt_bombs_left = bombs;  //USED TO BE 0, ITS SWITCHED
+
+	int done_bombs = 0;
+
+	while(true){
+		int x = random()%base->p_width;
+		int y = random()%base->p_height;
+
+		if(base->p_field[y][x] != CODE_MINE) {
+
+			base->p_field[y][x] = CODE_MINE;
+
+			done_bombs++;
+		}
+
+		if(done_bombs >= bombs){
+			break;
+		}
+	}
+
+
+// Give all non-bomb tiles the number of bombs around it
+	for(int x = 0; x < base->p_width; x++) {
+		for(int y = 0; y < base->p_height; y++) {
+			if(base->p_field[y][x] == CODE_MINE){
+
+				for(int xb = x - 1; xb < x + 2; xb++){
+					if(xb >= 0 && xb < base->p_width) {
+
+						for (int yb = y - 1; yb < y + 2; yb++) {
+							if(yb >= 0 && yb < base->p_height && base->p_field[yb][xb] != CODE_MINE) {
+
+								base->p_field[yb][xb]++;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return true;
+}
 
 /*
+ret_code click(basefield* base, int x, int y, click_type type); // Virtual
 
-BaseField::~BaseField() {
-	for (int count = 0; count < m_height; ++count)
-		delete[] m_field[count];
-	delete[] m_field;
-	m_field = nullptr;
+void set_size(basefield* base, int height, int width);
 
-	for (int count = 0; count < m_height; ++count)
-		delete[] m_visibleField[count];
-	delete[] m_visibleField;
-	m_visibleField = nullptr;
+int get_bombs(basefield* base);
+int get_bombs_left(basefield* base);
 
-	for (int count = 0; count < m_height; ++count)
-		delete[] m_clicked[count];
-	delete[] m_clicked;
-	m_clicked = nullptr;
-}
+*/
 
-int* BaseField::operator[](const int row){
-	return m_field[row];
-}
 
+/*
 bool BaseField::setupField(const int bombs){
 	if(bombs > (m_height * m_width)){
 		return false;

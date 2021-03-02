@@ -4,6 +4,20 @@
 int getInput();
 
 int main() {
+	basefield base;
+	initialize(&base, 5, 5);
+	setup_field(&base, 7);
+
+	for(int y = 4; y >=0; y--){
+		for(int x = 0; x < 5; x++){
+			printf("%i\t", base.p_field[y][x]);
+		}
+		printf("\n\n\n");
+	}
+
+
+	destruct(&base);
+
 //	int x = 7;//getInput("Field width: ");
 //	int y = 7;//getInput("Field height: ");
 //	int bombs = 3;//getInput("Amount of Bombs: ");
