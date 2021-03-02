@@ -1,40 +1,30 @@
 # Code Style
 
+`include/file.h`
 ```c
-int* i;
-i = &x;
-if(i == &x){
-	// Do something
-}
+#ifndef FILE_H
+#define FILE_H
 
-int* function(){
-	return i;
-}
-```
+void external_func(int x);
 
-`file.h`
-```c
-#ifndef FILE
-#define FILE
-
-void function_2();
+int* i = NULL;
 
 #endif
 ```
 
-`file.c`
+`src/file.c`
 ```c
 #include "file.h"
 
-static void static_func();
+static int* static_func();
 
-...
-
-void function_2(){
-	// Code
+void external_func(int x){
+	if(i == &x){
+		// Code
+	}
 }
 
-static void static_func(){
+int* void static_func(){
 	// More code
 }
 ```
