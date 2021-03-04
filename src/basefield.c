@@ -1,8 +1,9 @@
 #include "basefield.h"
 
 // Protected functions
-/*static void base_showTile(basefield* base, int x, int y);
-static void base_showTilesOnDeath(basefield* base, int x, int y);
+static void base_show_tile(basefield* base, int x, int y);
+/*
+static void base_show_tiles_on_death(basefield* base, int x, int y);
 
 static ret_code base_flag(basefield* base, int x, int y);
 static ret_code base_shovelWithMines(basefield* base, int x, int y);
@@ -86,10 +87,9 @@ bool setup_field(basefield* base, int bombs){ // Virtual
 			break;
 		}
 	}
-
+	
 	return true;
 }
-
 
 void set_size(basefield* base, int height, int width){
 	base->p_height = height;
@@ -112,6 +112,18 @@ void set_size(basefield* base, int height, int width){
 		}
 	}
 }
+
+static void base_show_tile(basefield* base, int x, int y){
+	if(base->p_field[y][x] > CODE_MINE){
+		base->p_visible_field[y][x] = base->p_field[y][x];
+	}
+//TODO: whenever a function calls (a function that) will call this, after that update your own field
+
+//	void (*ptr)(basefield*,int) = test;
+//	ptr(base, 3);
+//	showPlayerTile(x, y);
+}
+
 /*
 ret_code click(basefield* base, int x, int y, click_type type); // Virtual
 
@@ -274,12 +286,7 @@ void BaseField::showTilesOnDeath(const int x, const int y) {
 	}
 }
 
-void BaseField::showTile(const int x, const int y){
-	if(m_field[y][x] > CODE_MINE){
-		m_visibleField[y][x] = m_field[y][x];
-	}
-	showPlayerTile(x, y);
-}
+
 
 int BaseField::getBombs(){
 	return m_bombs;
