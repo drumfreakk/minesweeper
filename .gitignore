@@ -4,3 +4,5 @@ CMakeFiles
 minesweeper
 
 *.o
+*.swp
+bin/
