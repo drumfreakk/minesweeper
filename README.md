@@ -2,5 +2,5 @@
 
 ## Compilation
 
-Simply run `make` and `make run` or `./bin/minesweeper` to compile and run it.
+Simply run `make` and `make run` to compile and run it.
 
